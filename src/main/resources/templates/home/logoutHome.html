@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    
+    <style>
+      .container {
+          max-width: 560px;
+      }
+      .field-error {
+          border-color: #dc3545;
+          color: #dc3545;
+      }
+  </style>
+</head>
+<body>
+<div class="px-4 pt-5 my-5 text-center border-bottom">
+    <h1 class="display-4 fw-bold">My First Project</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">
+        This is my first project to create a board site. This project was worked with Spring Boot. MyBatis, Bootstrap, MySql, etc.
+        There are functions such as login, logout, sign in, post registration, modification, deletion, file upload, and file download.<br>
+
+      </p>
+      <p class="lead mb-4">
+        <h5 class="display-8  fw-bold">First, sign up and try to log in</h5>
+      </p>
+
+      <div class="d-grid gap-1 d-sm-flex justify-content-sm-center mb-5">
+        <!-- signinModal -->
+        <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4" data-bs-toggle="modal" data-bs-target="#joinModal">Sign up</button>
+      </div>
+
+    </div>
+    <div class="overflow-hidden" style="max-height: 30vh;">
+      <div class="container px-5">
+        <img src="https://getbootstrap.com/docs/5.2/examples/heroes/bootstrap-docs.png" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" width="700" height="500" loading="lazy">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div>
+  <!-- loginModal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+          <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+          <h1 class="fw-bold mb-0 fs-2">Log in</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <iframe class="modal-body pt-0" th:src="@{/loginForm}" width="100%" height="300"></iframe>
+        <div class="modal-body p-5">
+          <hr class="my-4">
+          <h2 class="fs-5 fw-bold mb-3">Or don't you have an account?</h2>
+          <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-3" type="button" data-bs-toggle="modal" data-bs-target="#joinModal">Sign up</button>
+        </div>
+
+
+        
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <!-- joinModal -->
+    <div class="modal fade" id="joinModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header p-5 pb-4 border-bottom-0">
+            <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+            <h1 class="fw-bold mb-0 fs-2">Sign up</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <iframe class="modal-body pt-0" th:src="@{/joinForm}" width="100%" height="450"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
+</body>
+</html>

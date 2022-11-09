@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MyFirstProject.member.mapper.MemberMapper">
+    <select id="findMemberByIdPw" parameterType="MyFirstProject.member.dto.MemberDto" resultType="MyFirstProject.member.dto.MemberDto">
+        <![CDATA[
+            SELECT
+                login_id,
+                password,
+                name
+            FROM
+                member
+            WHERE
+                deleted_yn = 'N'
+                AND login_id = #{loginId}
+                AND password = #{password}
+        ]]>
+    </select>
+    
+    <select id="findMemberById" parameterType="string" resultType="MyFirstProject.member.dto.MemberDto">
+        <![CDATA[
+            SELECT
+                login_id,
+                password,
+                name
+            FROM
+                member
+            WHERE
+                deleted_yn = 'N'
+                AND login_id = #{loginId}
+        ]]>
+    </select>
+
+    <insert id="insertMember" parameterType="MyFirstProject.member.dto.JoinFormDto">
+        <![CDATA[
+            INSERT INTO
+                member
+            (
+                login_id,
+                password,
+                name,
+                deleted_yn
+            )
+            VALUE
+            (
+                #{loginId},
+                #{password},
+                #{name},
+                'N'
+            )
+        ]]>
+    </insert>
+</mapper>

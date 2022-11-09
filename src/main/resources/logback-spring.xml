@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="true">
+    <!-- Appender -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %5p [%c] %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="console-info" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %p %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!--로거-->
+    <logger name="MyFirstProject" level="DEBUG" appender-ref="console"/>
+    <logger name="jdbc.sqlonly" level="INFO" appender-ref="console-info"/>
+    <logger name="jdbc.resultsettable" level="INFO" appender-ref="console-info"/>
+
+    <!--루트로거-->
+    <root level="off">
+        <appender-ref ref="console"/>
+    </root>
+</configuration>
