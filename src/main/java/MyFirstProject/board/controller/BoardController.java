@@ -22,60 +22,41 @@ public class BoardController {
 
     @GetMapping("/")
     public String home(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,
-                       Model model) throws Exception{
-        if (loginMember == null){ //세션 없으면
+                       Model model){
+        //home 분기
+        if (loginMember == null){
             return "home/logoutHome";
         }
+        return "redirect:/board/boardList";
+    }
 
-
-        //세션 있으면
-        model.addAttribute("member",loginMember);
-
-        //게시글이 있으면
+    @GetMapping("/board/boardList")
+    public String openBoardList(Model model) throws Exception {
         List<BoardSummaryDto> boardSummaryList=  boardService.getBoardSummaryList();
         model.addAttribute("list",boardSummaryList);
-
         return "home/loginHome";
     }
 
     @GetMapping("/board/openBoardDetail")
-    public String boardDetail(@RequestParam("board_idx") int boardIdx,Model model,@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember) throws Exception{
-        if (loginMember == null){ //세션 없으면
-            return "redirect:/";
-        }
-
-
-        //로그인 정보 제공 -> 사이드 바 위해서
-        model.addAttribute("member",loginMember);
+    public String boardDetail(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,@RequestParam("board_idx") int boardIdx,Model model) throws Exception{
         //게시글 상세 내용 가져오기
         BoardDto boardDto =  boardService.getBoardDetail(boardIdx);
         model.addAttribute("boardDto",boardDto);
         //게시글 수정권한 확인
         boolean modificationAuthority = boardService.checkModificationAuthority(loginMember.getLoginId(),boardDto.getCreatorId());
-        System.out.println(modificationAuthority);
         model.addAttribute("modificationAuthority" , modificationAuthority);
         return "board/boardDetail";
     }
 
     @GetMapping("/board/insertBoard")
-    public String openBoardWrite(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,Model model){
-        if (loginMember == null) { //세션 없으면
-            return "redirect:/";
-        }
-        model.addAttribute("member",loginMember);
+    public String openBoardWrite(Model model){
         return "board/boardWrite";
     }
 
     @PostMapping("/board/insertBoard")
     public String insertBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,BoardDto boardDto,Model model) throws Exception{
-        if (loginMember == null) { //세션 없으면
-            return "redirect:/";
-        }
-
         boardService.insertBoard(boardDto,loginMember);
-        model.addAttribute("member",loginMember);
         return "redirect:/";
-
     }
 
 
