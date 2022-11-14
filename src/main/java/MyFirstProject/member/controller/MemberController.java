@@ -51,7 +51,7 @@ public class MemberController {
         if (loginMember == null){
             log.debug("로그인 실패");
             bindingResult.reject("loginFail","아이디 또는 비밀번호가 맞지 않습니다.");
-            return "home/login/parentRedirect";
+            return "home/login/loginForm";
         }
 
         log.debug("로그인 성공");

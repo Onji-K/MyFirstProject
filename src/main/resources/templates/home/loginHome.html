@@ -64,6 +64,15 @@
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
     }
+    .myEc {
+      overflow: hidden;
+    }
+
+    .myEcc {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 </head>
 <body>
@@ -94,6 +103,7 @@
 
 
   <main class="d-flex flex-nowrap">
+    <!-- sidebar -->
     <div class="d-flex flex-column flex-shrink-0 mh-100 p-3 text-white bg-dark" style="width: 280px;">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
         <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
@@ -102,33 +112,27 @@
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="#" class="nav-link active" aria-current="page">
+          <a th:href="@{/}" class="nav-link active" aria-current="page">
             <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
             Home
           </a>
         </li>
         <li>
-          <a href="#" class="nav-link text-white">
+          <a th:href="@{/board/insertBoard}" class="nav-link text-white">
             <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
-            Post
+            글쓰기
           </a>
         </li>
         <li>
-          <a href="#" class="nav-link text-white">
-            <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
-            Orders
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link text-white">
-            <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
-            Products
-          </a>
-        </li>
-        <li>
-          <a href="#" class="nav-link text-white">
+          <a th:href="@{/userProfile}" class="nav-link text-white">
             <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
-            Customers
+            프로필
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/administratorPage}" class="nav-link text-white">
+            <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+            관리자 페이지
           </a>
         </li>
       </ul>
@@ -138,14 +142,14 @@
       <div class="dropdown">
         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-          <strong>mdo</strong>
+          <strong th:text="${member.name}">mdo</strong>
         </a>
         <!--dropdown menu-->
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-          <li><a class="dropdown-item" href="#">New project...</a></li>
+          <!-- <li><a class="dropdown-item" href="#">New project...</a></li>
           <li><a class="dropdown-item" href="#">Settings</a></li>
           <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li><hr class="dropdown-divider"></li>
+          <li><hr class="dropdown-divider"></li> -->
           <!--Sign out-->
           <li>
             <form th:action="@{/logout}" method="post">
@@ -156,9 +160,11 @@
       </div>
     </div>
     
+    <!-- padding -->
     <div class="b-example-divider b-example-vr"></div>
 
-    <div class="overflow-auto" style="max-height: 100vh; width: auto;">
+    <!-- content -->
+    <div class="overflow-auto" style="max-height: 100vh; width: 80vmax;">
       <section class="py-5 text-center container">
         <div class="row py-lg-5">
           <div class="col-lg-6 col-md-8 mx-auto">
@@ -178,14 +184,14 @@
 
 
             <div class="col" th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
-              <div class="card h-100">
+              <div class="card hover h-100" style="cursor: pointer;" th:onclick="|location.href='@{/board/openBoardDetail(board_idx=${list.boardIdx})}'|">
                 <img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title" th:text="${list.title}">Card title</h5>
-                  <p class="card-text" th:text="${list.summary}">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="card-body myEc">
+                  <h5 class="card-title myEcc" th:text="${list.title}">Card title</h5>
+                  <p class="card-text myEcc" th:text="${list.summary}">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                 </div>
                 <div class="card-footer">
-                  <small class="text-muted" th:text="editTimeInfo">Last updated 3 mins ago</small>
+                  <small class="text-muted" th:text="${list.editTimeInfo}">Last updated 3 mins ago</small>
                 </div>
               </div>
             </div>

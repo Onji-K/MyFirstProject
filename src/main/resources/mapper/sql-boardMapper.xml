@@ -9,12 +9,60 @@
                 title,
                 contents,
                 hit_cnt,
-                created_datetime,
-                updated_datetime
+                updated_datetime,
+                created_datetime
             FROM
                 board
             WHERE
                 deleted_yn = 'N'
         ]]>
     </select>
+
+    <select id="selectBoardDetailByBoardIdx" parameterType="int" resultType="MyFirstProject.board.dto.BoardDto">
+        <![CDATA[
+            SELECT
+                board_idx,
+                title,
+                contents,
+                hit_cnt,
+                created_datetime,
+                creator_id,
+                creator_name,
+                updated_datetime
+            FROM
+                board
+            WHERE
+                deleted_yn = 'N'
+                AND board_idx = #{boardIdx}
+        ]]>
+    </select>
+
+    <update id="updatedBoardHitCnt" parameterType="int">
+        <![CDATA[
+            UPDATE board
+            SET hit_cnt = hit_cnt+1
+            WHERE board_idx = #{boardIdx}
+        ]]>
+    </update>
+
+    <insert id="insertBoard" parameterType="MyFirstProject.board.dto.BoardDto">
+        <![CDATA[
+            INSERT INTO board
+            (
+                title,
+                contents,
+                created_datetime,
+                creator_id,
+                creator_name
+            )
+            VALUES
+            (
+                #{title},
+                #{contents},
+                NOW(),
+                #{creatorId},
+                #{creatorName}
+            )
+        ]]>
+    </insert>
 </mapper>
