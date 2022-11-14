@@ -21,7 +21,6 @@ public class BoardService {
 
     @Autowired
     BoardMapper boardMapper;
-
     public List<BoardSummaryDto> getBoardSummaryList() throws Exception{
         //BoardDto 가져오기
         List<BoardDto> summarizedBoardDto = boardMapper.selectSummarizedBoardList();
@@ -39,7 +38,7 @@ public class BoardService {
             boardSummary.setBoardIdx(board.getBoardIdx());
             boardSummary.setTitle(board.getTitle());
             boardSummary.setHitCount(board.getHitCnt());
-            
+
             //내용 간추리기
             String ogContents = board.getContents();
             boardSummary.setSummary(ogContents.substring(0,Math.min(100,ogContents.length())));
@@ -96,4 +95,19 @@ public class BoardService {
         boardDto.setCreatorId(loginMember.getLoginId());
         boardMapper.insertBoard(boardDto);
     }
+
+    public boolean confirmDelAuthority(int boardIdx, MemberDto loginMember) throws Exception {
+        String boardCreatorId = boardMapper.selectBoardCreatorByBoardIdx(boardIdx);
+        if (boardCreatorId != null && boardCreatorId.equals(loginMember.getLoginId())){
+            log.debug("권한 통과 살퍄");
+            return true;
+        }
+        log.debug("삭제 권한 통과 실패");
+        return false;
+    }
+
+    public void deleteBoard(int boardIdx) {
+        boardMapper.deleteBoard(boardIdx);
+    }
 }
+

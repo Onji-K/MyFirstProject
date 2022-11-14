@@ -65,4 +65,24 @@
             )
         ]]>
     </insert>
+
+    <select id="selectBoardCreatorByBoardIdx" parameterType="int" resultType="String">
+        <![CDATA[
+            SELECT
+                creator_id
+            FROM
+                board
+            WHERE
+                board_idx=#{boardIdx}
+                AND deleted_yn = 'N'
+        ]]>
+    </select>
+
+    <update id="deleteBoard" parameterType="int">
+        <![CDATA[
+            UPDATE board
+            SET deleted_yn = 'Y'
+            WHERE board_idx = #{boardIdx}
+        ]]>
+    </update>
 </mapper>

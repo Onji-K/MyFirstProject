@@ -5,6 +5,7 @@ import MyFirstProject.board.dto.BoardSummaryDto;
 import MyFirstProject.board.service.BoardService;
 import MyFirstProject.constant.SessionConstants;
 import MyFirstProject.member.dto.MemberDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class BoardController {
     @Autowired
@@ -49,14 +51,49 @@ public class BoardController {
     }
 
     @GetMapping("/board/insertBoard")
-    public String openBoardWrite(Model model){
+    public String openBoardWrite(){
         return "board/boardWrite";
     }
 
     @PostMapping("/board/insertBoard")
-    public String insertBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,BoardDto boardDto,Model model) throws Exception{
+    public String insertBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,BoardDto boardDto) throws Exception{
         boardService.insertBoard(boardDto,loginMember);
         return "redirect:/";
+    }
+
+    @PostMapping("/board/deleteBoard")
+    public String deleteBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember, int boardIdx) throws Exception {
+        log.debug("deleteBoard" + boardIdx);
+        boolean delAuthority = boardService.confirmDelAuthority(boardIdx,loginMember);
+        if (delAuthority == false){ //비정상 접근 : 작성자와 다른 아이디
+            log.debug("비정상 접근 : 작성자와 다른 아이디가 게시글을 삭제하려고 함");
+            log.debug("홈으로 리다이렉트 처리함");
+            return "redirect:/";
+        }
+
+        boardService.deleteBoard(boardIdx);
+        return "redirect:/";
+
+    }
+    @GetMapping("/board/editBoard")
+    public String openEditBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,@RequestParam("board_idx") int boardIdx,Model model) throws Exception {
+        log.debug("editBoard" + boardIdx);
+        boolean delAuthority = boardService.confirmDelAuthority(boardIdx,loginMember);
+        if (delAuthority == false){ //비정상 접근 : 작성자와 다른 아이디
+            log.debug("비정상 접근 : 작성자와 다른 아이디가 게시글을 수정하려고 함");
+            log.debug("홈으로 리다이렉트 처리함");
+            return "redirect:/";
+        }
+
+        BoardDto boardDto = boardService.getBoardDetail(boardIdx);
+        log.debug(boardDto.getContents());
+        model.addAttribute("boardDto",boardDto);
+        return "board/boardEdit";
+    }
+    @PostMapping("/board/editBoard")
+    public String editBoard(){
+        //구현 필요 에딧 페이지의 버튼부터
+        return null;
     }
 
 
