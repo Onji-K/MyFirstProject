@@ -7,6 +7,9 @@ import MyFirstProject.member.dto.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -92,10 +95,27 @@ public class BoardService {
         return loginId.equals(creatorId);
     }
 
-    public void insertBoard(BoardDto boardDto, MemberDto loginMember) throws Exception {
-        boardDto.setCreatorName(loginMember.getName());
-        boardDto.setCreatorId(loginMember.getLoginId());
-        boardMapper.insertBoard(boardDto);
+    public void insertBoard(BoardDto boardDto, MultipartHttpServletRequest multipartHttpServletRequest, MemberDto loginMember) throws Exception {
+//        임시 주석 처리 업로드 확인을 위해
+//        boardDto.setCreatorName(loginMember.getName());
+//        boardDto.setCreatorId(loginMember.getLoginId());
+//        boardMapper.insertBoard(boardDto);
+        if (ObjectUtils.isEmpty(multipartHttpServletRequest) == false){
+            Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
+            String name;
+            while (iterator.hasNext()){
+                name = iterator.next();
+                log.debug("file tag name = " + name);
+                List<MultipartFile> list = multipartHttpServletRequest.getFiles(name);
+                for (MultipartFile multipartFile : list){
+                    log.debug("start file information");
+                    log.debug("file name : " + multipartFile.getOriginalFilename());
+                    log.debug("file size : " + multipartFile.getSize());
+                    log.debug("file content type : " + multipartFile.getContentType());
+                    log.debug("end file information. \n");
+                }
+            }
+        }
     }
 
     public boolean confirmDelAuthority(int boardIdx, MemberDto loginMember) throws Exception {

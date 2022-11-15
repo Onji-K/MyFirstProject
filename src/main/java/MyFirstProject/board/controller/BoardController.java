@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.List;
 
@@ -57,8 +58,10 @@ public class BoardController {
     }
 
     @PostMapping("/board/insertBoard")
-    public String insertBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,BoardDto boardDto) throws Exception{
-        boardService.insertBoard(boardDto,loginMember);
+    public String insertBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,
+                              BoardDto boardDto,
+                              MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
+        boardService.insertBoard(boardDto,multipartHttpServletRequest,loginMember);
         return "redirect:/";
     }
 

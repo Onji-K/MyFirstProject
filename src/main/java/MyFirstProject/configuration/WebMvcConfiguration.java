@@ -16,5 +16,13 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .addPathPatterns(LoginInterceptor.TARGET_PATTERN);
     }
 
+    @Bean
+    public CommonsMultipartResolver multipartResolver(){
+        CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
+        commonsMultipartResolver.setDefaultEncoding("UTF-8");
+        commonsMultipartResolver.setMaxUploadSizePerFile(5*1024*1024);
+        return commonsMultipartResolver;
+    }
+
 
 }
