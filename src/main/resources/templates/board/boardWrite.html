@@ -170,7 +170,7 @@
           <div class="col-lg-8">
             <h1 class="fw-bolder mb-1">게시글 등록</h1>
             <hr class="my-4">
-            <form id="frm" name="frm" method="post" action="/board/insertBoard">
+            <form id="frm" name="frm" method="post" action="/board/insertBoard" enctype="multipart/form-data">
               <!-- Post title-->
               <div class="input-group input-group-lg mb-2">
                 <span class="input-group-text" id="inputGroup-sizing-lg">title</span>
@@ -183,7 +183,7 @@
               </div>
               <!-- Post file -->
               <div class="input-group mb-3 mb-2">
-                <input type="file" class="form-control" id="inputGroupFile02">
+                <input type="file" class="form-control" name="files" multiple="multiple" id="inputGroupFile02">
                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
               </div>
               <button type="submit" id="submit" class="btn btn-outline-primary me-2" >save</button>
