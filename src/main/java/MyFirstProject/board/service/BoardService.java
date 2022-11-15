@@ -80,8 +80,10 @@ public class BoardService {
         return Arrays.stream(boardSummaryArray).toList();
     }
 
+    public void updateBoardHitCnt(int boardIdx)throws Exception{
+        boardMapper.updateBoardHitCnt(boardIdx);
+    }
     public BoardDto getBoardDetail(int boardIdx) throws Exception {
-        boardMapper.updatedBoardHitCnt(boardIdx);
         BoardDto boardDto = boardMapper.selectBoardDetailByBoardIdx(boardIdx);
         return boardDto;
     }
@@ -106,8 +108,12 @@ public class BoardService {
         return false;
     }
 
-    public void deleteBoard(int boardIdx) {
+    public void deleteBoard(int boardIdx) throws Exception {
         boardMapper.deleteBoard(boardIdx);
+    }
+
+    public void editBoard(BoardDto boardDto) throws Exception {
+        boardMapper.updateBoard(boardDto);
     }
 }
 

@@ -43,6 +43,7 @@ public class BoardController {
     public String boardDetail(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,@RequestParam("board_idx") int boardIdx,Model model) throws Exception{
         //게시글 상세 내용 가져오기
         BoardDto boardDto =  boardService.getBoardDetail(boardIdx);
+        boardService.updateBoardHitCnt(boardIdx);
         model.addAttribute("boardDto",boardDto);
         //게시글 수정권한 확인
         boolean modificationAuthority = boardService.checkModificationAuthority(loginMember.getLoginId(),boardDto.getCreatorId());
@@ -91,10 +92,19 @@ public class BoardController {
         return "board/boardEdit";
     }
     @PostMapping("/board/editBoard")
-    public String editBoard(){
-        //구현 필요 에딧 페이지의 버튼부터
-        return null;
+    public String editBoard(BoardDto boardDto){
+        log.debug("접근");
+        //게시글 수정
+        try {
+            boardService.editBoard(boardDto);
+        } catch (Exception e){
+            log.debug("게시글 수정 중 오류 발생 : 게시글 번호 : " + boardDto.getBoardIdx());
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return "redirect:/";
     }
+
 
 
 

@@ -12,11 +12,13 @@ public interface BoardMapper {
 
     BoardDto selectBoardDetailByBoardIdx(int boardIdx) throws Exception;
 
-    void updatedBoardHitCnt(int boardIdx) throws Exception;
+    void updateBoardHitCnt(int boardIdx) throws Exception;
 
     void insertBoard(BoardDto boardDto) throws Exception;
 
     String selectBoardCreatorByBoardIdx(int boardIdx) throws Exception;
 
-    void deleteBoard(int boardIdx);
+    void deleteBoard(int boardIdx) throws Exception;
+
+    void updateBoard(BoardDto boardDto) throws Exception;
 }
