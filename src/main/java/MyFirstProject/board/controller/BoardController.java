@@ -61,7 +61,11 @@ public class BoardController {
     public String insertBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,
                               BoardDto boardDto,
                               MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
-        boardService.insertBoard(boardDto,multipartHttpServletRequest,loginMember);
+        try {
+            boardService.insertBoard(boardDto,multipartHttpServletRequest,loginMember);
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
         return "redirect:/";
     }
 

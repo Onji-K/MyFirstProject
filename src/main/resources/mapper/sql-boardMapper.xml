@@ -45,7 +45,7 @@
         ]]>
     </update>
 
-    <insert id="insertBoard" parameterType="MyFirstProject.board.dto.BoardDto">
+    <insert id="insertBoard" parameterType="MyFirstProject.board.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardIdx">
         <![CDATA[
             INSERT INTO board
             (
@@ -93,4 +93,35 @@
             WHERE board_idx = #{boardIdx} AND deleted_yn = 'N'
         ]]>
     </update>
+
+    <insert id="insertBoardFileList" parameterType="MyFirstProject.board.dto.BoardFileDto" useGeneratedKeys="true" keyProperty="idx">
+        <![CDATA[
+            INSERT INTO t_file
+                (board_idx, original_file_name, stored_file_path, file_size,
+                creator_id, created_datetime)
+            VALUES
+        ]]>
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.boardIdx},
+                #{item.originalFileName},
+                #{item.storedFilePath},
+                #{item.fileSize},
+                #{item.creatorId},
+                NOW()
+            )
+        </foreach>
+    </insert>
+
+    <update id="deleteFileRow" parameterType="MyFirstProject.board.dto.BoardFileDto">
+        <![CDATA[
+            UPDATE t_file
+            SET deleted_yn = 'Y'
+            WHERE
+        ]]>
+        <foreach collection="list" item="item" separator=",">
+            idx = #{item.idx}
+        </foreach>
+    </update>
+
 </mapper>

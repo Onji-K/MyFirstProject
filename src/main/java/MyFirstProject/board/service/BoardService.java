@@ -1,12 +1,15 @@
 package MyFirstProject.board.service;
 
+import MyFirstProject.board.common.FileUtils;
 import MyFirstProject.board.dto.BoardDto;
+import MyFirstProject.board.dto.BoardFileDto;
 import MyFirstProject.board.dto.BoardSummaryDto;
 import MyFirstProject.board.mapper.BoardMapper;
 import MyFirstProject.member.dto.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -24,6 +27,10 @@ public class BoardService {
 
     @Autowired
     BoardMapper boardMapper;
+
+    @Autowired
+    FileUtils fileUtils;
+
     public List<BoardSummaryDto> getBoardSummaryList() throws Exception{
         //BoardDto 가져오기
         List<BoardDto> summarizedBoardDto = boardMapper.selectSummarizedBoardList();
@@ -95,27 +102,33 @@ public class BoardService {
         return loginId.equals(creatorId);
     }
 
-    public void insertBoard(BoardDto boardDto, MultipartHttpServletRequest multipartHttpServletRequest, MemberDto loginMember) throws Exception {
-//        임시 주석 처리 업로드 확인을 위해
-//        boardDto.setCreatorName(loginMember.getName());
-//        boardDto.setCreatorId(loginMember.getLoginId());
-//        boardMapper.insertBoard(boardDto);
-        if (ObjectUtils.isEmpty(multipartHttpServletRequest) == false){
-            Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
-            String name;
-            while (iterator.hasNext()){
-                name = iterator.next();
-                log.debug("file tag name = " + name);
-                List<MultipartFile> list = multipartHttpServletRequest.getFiles(name);
-                for (MultipartFile multipartFile : list){
-                    log.debug("start file information");
-                    log.debug("file name : " + multipartFile.getOriginalFilename());
-                    log.debug("file size : " + multipartFile.getSize());
-                    log.debug("file content type : " + multipartFile.getContentType());
-                    log.debug("end file information. \n");
-                }
+    @Transactional
+    public void insertBoard(BoardDto boardDto,
+                            MultipartHttpServletRequest multipartHttpServletRequest,
+                            MemberDto loginMember) throws Exception {
+        //board insert
+        log.debug("board insert");
+        boardDto.setCreatorName(loginMember.getName());
+        boardDto.setCreatorId(loginMember.getLoginId());
+        boardMapper.insertBoard(boardDto);
+
+        //file insert
+        log.debug("file insert");
+        List<BoardFileDto> list = fileUtils.parseFileInfo(boardDto.getBoardIdx(), boardDto.getCreatorId(), multipartHttpServletRequest);
+        if (list.isEmpty() == false){
+            try {
+                boardMapper.insertBoardFileList(list);
+                int i = 10/0; //의도적 오류
+            } catch (Exception e){
+                //파일 삭제 코드
+                fileUtils.deleteFileList(list);
+                boardMapper.deleteFileRow(list);
+                throw new Exception("파일 저장중 에러 발생");
             }
+
         }
+
+
     }
 
     public boolean confirmDelAuthority(int boardIdx, MemberDto loginMember) throws Exception {
