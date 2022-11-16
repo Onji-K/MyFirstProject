@@ -4,6 +4,7 @@ import MyFirstProject.constant.SessionConstants;
 import MyFirstProject.member.dto.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,7 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.debug("-----------------------------");
+        log.debug("---------------------------------------------------------------------");
         log.debug("start - request uri : "+request.getRequestURI());
         MemberDto memberDto = (MemberDto) request.getSession(true).getAttribute(SessionConstants.LOGIN_MEMBER);
         if (memberDto!=null){return true;} //로그인 되어있음

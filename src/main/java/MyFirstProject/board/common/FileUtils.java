@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
 @Slf4j
 @Component
 public class FileUtils {
-    public List<BoardFileDto> parseFileInfo(int boardIdx, String creatorId, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
+    public List<BoardFileDto> parseFileInfo(int boardIdx, String creatorId, MultipartHttpServletRequest multipartHttpServletRequest){
         log.debug("fileUtils Log Start\n");
         if (ObjectUtils.isEmpty(multipartHttpServletRequest)){return null;}
 
@@ -60,12 +61,17 @@ public class FileUtils {
                     boardFileDto.setOriginalFileName(multipartFile.getOriginalFilename());
                     log.debug("originalFileName : " + multipartFile.getOriginalFilename());
                     boardFileDto.setStoredFilePath(path + "/" + newFileName);
-                    fileList.add(boardFileDto);
 
-                    //파일 생성
-                    file = new File(path + "/" + newFileName);
-                    multipartFile.transferTo(file);
-                    log.debug("file save done");
+
+                    try {
+                        log.debug("try to save file : " + newFileName);
+                        file = new File(path + "/" + newFileName);
+                        multipartFile.transferTo(file);
+                    } catch (IOException e){
+                        log.error("IOException while save file :" + newFileName);
+                        boardFileDto.setHasError(true);
+                    }
+                    fileList.add(boardFileDto);
                 }
             }
         }

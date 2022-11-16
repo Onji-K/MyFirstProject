@@ -10,4 +10,5 @@ public class BoardFileDto {
     private String originalFileName;
     private String storedFilePath;
     private long fileSize;
+    private boolean hasError = false;
 }

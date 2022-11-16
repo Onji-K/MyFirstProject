@@ -61,17 +61,13 @@ public class BoardController {
     public String insertBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember,
                               BoardDto boardDto,
                               MultipartHttpServletRequest multipartHttpServletRequest) throws Exception{
-        try {
-            boardService.insertBoard(boardDto,multipartHttpServletRequest,loginMember);
-        } catch (Exception e){
-            log.error(e.getMessage());
-        }
+        boardService.insertBoard(boardDto,loginMember, multipartHttpServletRequest);
         return "redirect:/";
     }
 
     @PostMapping("/board/deleteBoard")
     public String deleteBoard(@SessionAttribute(name = SessionConstants.LOGIN_MEMBER,required = false)MemberDto loginMember, int boardIdx) throws Exception {
-        log.debug("deleteBoard" + boardIdx);
+        log.debug("deleteBoard : " + boardIdx);
         boolean delAuthority = boardService.confirmDelAuthority(boardIdx,loginMember);
         if (delAuthority == false){ //비정상 접근 : 작성자와 다른 아이디
             log.debug("비정상 접근 : 작성자와 다른 아이디가 게시글을 삭제하려고 함");

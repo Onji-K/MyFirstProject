@@ -14,12 +14,14 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -103,9 +105,9 @@ public class BoardService {
     }
 
     @Transactional
-    public void insertBoard(BoardDto boardDto,
-                            MultipartHttpServletRequest multipartHttpServletRequest,
-                            MemberDto loginMember) throws Exception {
+    public List<BoardFileDto> insertBoard(BoardDto boardDto,
+                            MemberDto loginMember,
+                            MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
         //board insert
         log.debug("board insert");
         boardDto.setCreatorName(loginMember.getName());
@@ -115,20 +117,24 @@ public class BoardService {
         //file insert
         log.debug("file insert");
         List<BoardFileDto> list = fileUtils.parseFileInfo(boardDto.getBoardIdx(), boardDto.getCreatorId(), multipartHttpServletRequest);
+        //if file has error BoardFileDto.hasError -> true
+
+        //저장 성공한 애들 리스트
+        List<BoardFileDto> successList = list.stream()
+                .filter(h -> h.isHasError() == false)
+                .collect(Collectors.toList());
+
+        //저장 성공한 애들만 DB에 목록 넣기
         if (list.isEmpty() == false){
             try {
-                boardMapper.insertBoardFileList(list);
-                int i = 10/0; //의도적 오류
+                boardMapper.insertBoardFileList(successList);
             } catch (Exception e){
                 //파일 삭제 코드
-                fileUtils.deleteFileList(list);
-                boardMapper.deleteFileRow(list);
-                throw new Exception("파일 저장중 에러 발생");
+                fileUtils.deleteFileList(successList);
+                throw new RuntimeException("파일 저장중 에러 발생");
             }
-
         }
-
-
+        return list;
     }
 
     public boolean confirmDelAuthority(int boardIdx, MemberDto loginMember) throws Exception {
