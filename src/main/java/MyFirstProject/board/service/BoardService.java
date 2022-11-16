@@ -97,6 +97,8 @@ public class BoardService {
     }
     public BoardDto getBoardDetail(int boardIdx) throws Exception {
         BoardDto boardDto = boardMapper.selectBoardDetailByBoardIdx(boardIdx);
+        List<BoardFileDto> fileList = boardMapper.selectBoardFileList(boardIdx);
+        boardDto.setFileList(fileList);
         return boardDto;
     }
 
@@ -154,5 +156,7 @@ public class BoardService {
     public void editBoard(BoardDto boardDto) throws Exception {
         boardMapper.updateBoard(boardDto);
     }
+
+
 }
 
