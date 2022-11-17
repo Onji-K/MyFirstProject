@@ -26,4 +26,6 @@ public interface BoardMapper {
     void insertBoardFileList(List<BoardFileDto> list) throws Exception;
 
     List<BoardFileDto> selectBoardFileList(int boardIdx) throws Exception;
+
+    String selectStoredFilePath(int idx);
 }

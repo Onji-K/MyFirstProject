@@ -204,11 +204,33 @@
                         <p class="fs-5 mb-4">For me, the most fascinating interface is Twitter. I have odd cosmic thoughts every day and I realized I could hold them to myself or share them with people who might be interested.</p>
                         <p class="fs-5 mb-4">Venus has a runaway greenhouse effect. I kind of want to know what happened there because we're twirling knobs here on Earth without knowing the consequences of it. Mars once had running water. It's bone dry today. Something bad happened there as well.</p>
                     </section>
-                    <img th:src="@{images/20221116/9235597889000.jpg}">
-                    <!-- File List -->
-                    <div class="mb-3">
-                      <a th:each="list : ${boardDto.fileList}" 
-                        th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
+                    <!-- img -->
+                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+                      <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                      </div>
+                      <div class="carousel-inner">
+                        <!-- repeat -->
+                        <th:block th:each="file:${boardDto.fileList}">
+                          <div class="carousel-item" th:classappend="${boardDto.fileList[0].idx}==${file.idx} ? 'active' : ''">
+                            <img th:src="|/board/getImage?img_idx=${file.idx}|" class="d-block w-100" alt="Responsive image">
+                            <div class="carousel-caption d-none d-md-block">
+                              <h5 th:text="${file.originalFileName}"></h5>
+                              <p th:text="|${file.originalFileName} (${file.fileSize} kb) by ${file.creatorId}|"></p>
+                            </div>
+                          </div>
+                        </th:block>
+                      </div>
+                      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                      </button>
                     </div>
                     
                 </article>

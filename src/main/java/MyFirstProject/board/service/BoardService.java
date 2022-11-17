@@ -158,5 +158,9 @@ public class BoardService {
     }
 
 
+    public String getStoredFilePath(int idx) {
+        String storedFilePath = boardMapper.selectStoredFilePath(idx);
+        return storedFilePath;
+    }
 }
 

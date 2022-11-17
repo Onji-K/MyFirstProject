@@ -7,14 +7,15 @@ import MyFirstProject.constant.SessionConstants;
 import MyFirstProject.member.dto.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
@@ -50,6 +51,16 @@ public class BoardController {
         boolean modificationAuthority = boardService.checkModificationAuthority(loginMember.getLoginId(),boardDto.getCreatorId());
         model.addAttribute("modificationAuthority" , modificationAuthority);
         return "board/boardDetail";
+    }
+
+    @ResponseBody
+    @GetMapping("/board/getImage")
+    public Resource showImage(@RequestParam("img_idx")int idx) throws MalformedURLException {
+        log.debug(String.valueOf(idx));
+        String storedFilePath = boardService.getStoredFilePath(idx);
+        log.debug(storedFilePath);
+        File file = new File(storedFilePath);
+        return new UrlResource("file:" + file.getAbsolutePath());
     }
 
     @GetMapping("/board/insertBoard")
