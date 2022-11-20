@@ -9,4 +9,5 @@ public class BoardSummaryDto {
     private int hitCount;
     private String summary;
     private String editTimeInfo;
+    private int thumbnailImageIdx;
 }

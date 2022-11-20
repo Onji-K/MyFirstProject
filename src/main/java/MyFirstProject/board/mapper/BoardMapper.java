@@ -5,6 +5,7 @@ import MyFirstProject.board.dto.BoardFileDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface BoardMapper {
@@ -28,4 +29,8 @@ public interface BoardMapper {
     List<BoardFileDto> selectBoardFileList(int boardIdx) throws Exception;
 
     String selectStoredFilePath(int idx);
+
+    String selectOriginalFileName(int idx);
+
+    Optional<Integer> selectThumbnailImgIdx(int boardIdx);
 }

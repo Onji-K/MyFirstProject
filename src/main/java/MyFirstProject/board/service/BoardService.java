@@ -21,6 +21,7 @@ import java.time.Period;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -86,8 +87,15 @@ public class BoardService {
                 }
             }
             boardSummary.setEditTimeInfo(finalPhrase);
+
+            //썸네일 이미지 등록
+            Optional<Integer> thumbnailImgIdx =  boardMapper.selectThumbnailImgIdx(board.getBoardIdx());
+            if (thumbnailImgIdx.isPresent()){boardSummary.setThumbnailImageIdx(thumbnailImgIdx.get());}
+            else {boardSummary.setThumbnailImageIdx(-1);}//이미지 없음
+
             boardSummaryArray[i++] = boardSummary;
         }
+
 
         return Arrays.stream(boardSummaryArray).toList();
     }
@@ -98,6 +106,7 @@ public class BoardService {
     public BoardDto getBoardDetail(int boardIdx) throws Exception {
         BoardDto boardDto = boardMapper.selectBoardDetailByBoardIdx(boardIdx);
         List<BoardFileDto> fileList = boardMapper.selectBoardFileList(boardIdx);
+        log.debug("fileList" + (fileList == null));
         boardDto.setFileList(fileList);
         return boardDto;
     }
@@ -161,6 +170,11 @@ public class BoardService {
     public String getStoredFilePath(int idx) {
         String storedFilePath = boardMapper.selectStoredFilePath(idx);
         return storedFilePath;
+    }
+
+    public String getOriginalFileName(int idx) {
+        String originalFileName = boardMapper.selectOriginalFileName(idx);
+        return originalFileName;
     }
 }
 

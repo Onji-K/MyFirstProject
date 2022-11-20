@@ -138,4 +138,30 @@
         ]]>
     </select>
 
+    <select id="selectOriginalFileName" parameterType="int" resultType="String">
+        <![CDATA[
+            SELECT
+                original_file_name
+            FROM
+                t_file
+            WHERE
+                idx = #{idx}
+                AND deleted_yn = 'N'
+        ]]>
+    </select>
+
+    <select id="selectThumbnailImgIdx" parameterType="int" resultType="int">
+        <![CDATA[
+            SELECT
+                idx
+            FROM
+                t_file
+            WHERE
+                board_idx = #{boardIdx}
+                AND deleted_yn = 'N'
+            LIMIT
+                1
+        ]]>
+    </select>
+
 </mapper>

@@ -9,13 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.util.UriUtils;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Slf4j
@@ -54,14 +58,34 @@ public class BoardController {
     }
 
     @ResponseBody
-    @GetMapping("/board/getImage")
+    @GetMapping("/board/image")
     public Resource showImage(@RequestParam("img_idx")int idx) throws MalformedURLException {
-        log.debug(String.valueOf(idx));
+        log.debug("showImage idx : " + idx);
         String storedFilePath = boardService.getStoredFilePath(idx);
         log.debug(storedFilePath);
         File file = new File(storedFilePath);
         return new UrlResource("file:" + file.getAbsolutePath());
     }
+
+    @ResponseBody
+    @GetMapping("/board/getImage")
+    public ResponseEntity<Resource> getImage(@RequestParam("img_idx")int idx) throws MalformedURLException{
+        log.debug("getImage idx : " + idx);
+        //Body - resource
+        String storedFilePath = boardService.getStoredFilePath(idx);
+        UrlResource resource = new UrlResource("file:"+storedFilePath);
+        //Header - encoding
+        String originalFileName = boardService.getOriginalFileName(idx);
+        String encodedOriginalFileName = UriUtils.encode(originalFileName, StandardCharsets.UTF_8);
+
+        String contentDisposition = "attachment; filename=\"" + encodedOriginalFileName + "\"";
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,contentDisposition)
+                .body(resource);
+    }
+
 
     @GetMapping("/board/insertBoard")
     public String openBoardWrite(){

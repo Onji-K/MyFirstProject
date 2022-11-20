@@ -205,20 +205,27 @@
                         <p class="fs-5 mb-4">Venus has a runaway greenhouse effect. I kind of want to know what happened there because we're twirling knobs here on Earth without knowing the consequences of it. Mars once had running water. It's bone dry today. Something bad happened there as well.</p>
                     </section>
                     <!-- img -->
-                    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+                    <div th:if="${!boardDto.fileList.empty}" id="carouselExampleCaptions" class="carousel slide mb-4" data-bs-ride="false">
                       <div class="carousel-indicators">
                         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <th:block th:each="i : ${#numbers.sequence(2,boardDto.fileList.size(),1)}">
+                          <button type="button" data-bs-target="#carouselExampleCaptions"
+                          th:attr="data-bs-slide-to=${i-1},
+                          aria-label=|Slide ${i}|"></button>
+                        </th:block>
+                        <!-- <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button> -->
                       </div>
                       <div class="carousel-inner">
                         <!-- repeat -->
                         <th:block th:each="file:${boardDto.fileList}">
                           <div class="carousel-item" th:classappend="${boardDto.fileList[0].idx}==${file.idx} ? 'active' : ''">
-                            <img th:src="|/board/getImage?img_idx=${file.idx}|" class="d-block w-100" alt="Responsive image">
+                            <img th:src="|/board/image?img_idx=${file.idx}|" class="d-block w-100 rounded" alt="Responsive image">
                             <div class="carousel-caption d-none d-md-block">
                               <h5 th:text="${file.originalFileName}"></h5>
                               <p th:text="|${file.originalFileName} (${file.fileSize} kb) by ${file.creatorId}|"></p>
+                              <a th:href="@{/board/getImage(img_idx=${file.idx})}" class="link-primary">다운로드</a>
                             </div>
                           </div>
                         </th:block>
@@ -239,7 +246,14 @@
                     <div class="card bg-light">
                         <div class="card-body">
                             <!-- Comment form-->
-                            <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
+                            <form class="mb-4" method="post" th:action="@{/board/comment/add}">
+                              <div class="row">
+                                <textarea class="col form-control" rows="3" name="comment" placeholder="Join the discussion and leave a comment!"></textarea>
+                              </div>
+                              <div class="row">
+                                <button type="submit" class="col btn btn-primary btn-lg">Submit</button>
+                              </div>
+                            </form>
                             <!-- Comment with nested comments-->
                             <div class="d-flex mb-4">
                                 <!-- Parent comment-->
