@@ -2,6 +2,7 @@ package MyFirstProject.board.controller;
 
 import MyFirstProject.board.dto.BoardDto;
 import MyFirstProject.board.dto.BoardSummaryDto;
+import MyFirstProject.board.dto.CommentDto;
 import MyFirstProject.board.service.BoardService;
 import MyFirstProject.constant.SessionConstants;
 import MyFirstProject.member.dto.MemberDto;
@@ -50,7 +51,11 @@ public class BoardController {
         //게시글 상세 내용 가져오기
         BoardDto boardDto =  boardService.getBoardDetail(boardIdx);
         boardService.updateBoardHitCnt(boardIdx);
+        //댓글 가져오기
+        List<CommentDto> commentList = boardService.getBoardCommentList(boardIdx);
+        boardDto.setCommentList(commentList);
         model.addAttribute("boardDto",boardDto);
+
         //게시글 수정권한 확인
         boolean modificationAuthority = boardService.checkModificationAuthority(loginMember.getLoginId(),boardDto.getCreatorId());
         model.addAttribute("modificationAuthority" , modificationAuthority);

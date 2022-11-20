@@ -2,6 +2,7 @@ package MyFirstProject.board.mapper;
 
 import MyFirstProject.board.dto.BoardDto;
 import MyFirstProject.board.dto.BoardFileDto;
+import MyFirstProject.board.dto.CommentDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -33,4 +34,6 @@ public interface BoardMapper {
     String selectOriginalFileName(int idx);
 
     Optional<Integer> selectThumbnailImgIdx(int boardIdx);
+
+    List<CommentDto> selectBoardCommentList(int boardIdx);
 }

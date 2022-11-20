@@ -4,6 +4,7 @@ import MyFirstProject.board.common.FileUtils;
 import MyFirstProject.board.dto.BoardDto;
 import MyFirstProject.board.dto.BoardFileDto;
 import MyFirstProject.board.dto.BoardSummaryDto;
+import MyFirstProject.board.dto.CommentDto;
 import MyFirstProject.board.mapper.BoardMapper;
 import MyFirstProject.member.dto.MemberDto;
 import lombok.extern.slf4j.Slf4j;
@@ -106,7 +107,6 @@ public class BoardService {
     public BoardDto getBoardDetail(int boardIdx) throws Exception {
         BoardDto boardDto = boardMapper.selectBoardDetailByBoardIdx(boardIdx);
         List<BoardFileDto> fileList = boardMapper.selectBoardFileList(boardIdx);
-        log.debug("fileList" + (fileList == null));
         boardDto.setFileList(fileList);
         return boardDto;
     }
@@ -175,6 +175,11 @@ public class BoardService {
     public String getOriginalFileName(int idx) {
         String originalFileName = boardMapper.selectOriginalFileName(idx);
         return originalFileName;
+    }
+
+    public List<CommentDto> getBoardCommentList(int boardIdx) {
+        List<CommentDto> commentList = boardMapper.selectBoardCommentList(boardIdx);
+        return commentList;
     }
 }
 
