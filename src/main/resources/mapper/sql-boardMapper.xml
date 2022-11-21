@@ -175,5 +175,14 @@
                 AND deleted_yn = 'N'
         ]]>
     </select>
+    
+    <insert id="insertComment" parameterType="MyFirstProject.board.dto.CommentDto">
+        <![CDATA[
+            INSERT INTO comment
+            (
+
+            )
+        ]]>
+    </insert>
 
 </mapper>

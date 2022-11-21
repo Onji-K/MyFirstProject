@@ -36,4 +36,7 @@ public interface BoardMapper {
     Optional<Integer> selectThumbnailImgIdx(int boardIdx);
 
     List<CommentDto> selectBoardCommentList(int boardIdx);
+
+
+    void insertComment(CommentDto commentDto);
 }

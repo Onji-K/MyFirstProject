@@ -16,5 +16,4 @@ public class BoardDto {
     private String creatorName;
     private String creatorId;
     private List<BoardFileDto> fileList;
-    private List<CommentDto> commentList;
 }

@@ -15,5 +15,7 @@ public interface MemberMapper {
 
     MemberDto findMemberById(String loginId);
 
+    MemberDto findMemberByIdx(int memberIdx);
+
     int insertMember(JoinFormDto joinFormDto);
 }

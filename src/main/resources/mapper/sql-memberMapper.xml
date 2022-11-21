@@ -50,4 +50,19 @@
             )
         ]]>
     </insert>
+
+    <select id="findMemberByIdx" resultType="MyFirstProject.member.dto.MemberDto">
+        <![CDATA[
+            SELECT
+                member_idx,
+                login_id,
+                password,
+                name
+            FROM
+                member
+            WHERE
+                deleted_yn = 'N'
+                AND member_idx = #{memberIdx}
+        ]]>
+    </select>
 </mapper>

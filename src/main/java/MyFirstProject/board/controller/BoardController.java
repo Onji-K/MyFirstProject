@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -51,15 +53,41 @@ public class BoardController {
         //게시글 상세 내용 가져오기
         BoardDto boardDto =  boardService.getBoardDetail(boardIdx);
         boardService.updateBoardHitCnt(boardIdx);
+        model.addAttribute("boardDto",boardDto);
         //댓글 가져오기
         List<CommentDto> commentList = boardService.getBoardCommentList(boardIdx);
-        boardDto.setCommentList(commentList);
-        model.addAttribute("boardDto",boardDto);
+        model.addAttribute("commentList", commentList);
+
+
 
         //게시글 수정권한 확인
         boolean modificationAuthority = boardService.checkModificationAuthority(loginMember.getLoginId(),boardDto.getCreatorId());
         model.addAttribute("modificationAuthority" , modificationAuthority);
         return "board/boardDetail";
+    }
+
+    @PostMapping("/board/comment/add")
+    public String addComment(Model model , HttpServletRequest request, @RequestParam Map<String, Object> paramMap){
+        MemberDto member = (MemberDto) request.getSession().getAttribute(SessionConstants.LOGIN_MEMBER);
+        int boardIdx = Integer.valueOf(paramMap.get("boardIdx").toString());
+        String content = paramMap.get("content").toString();
+        CommentDto commentDto = new CommentDto();
+        commentDto.setContent(content);
+        commentDto.setBoardIdx(boardIdx);
+        commentDto.setMemberIdx(member.getMemberIdx());
+
+        //DB에 댓글 넣기
+        log.debug("addComment : " + commentDto.getContent() + " By " + commentDto.getMemberDto().getName());
+        boardService.addComment(commentDto);
+
+        //모델에 댓글 리스트 추가
+        List<CommentDto> commentList = boardService.getBoardCommentList(boardIdx);
+        model.addAttribute("commentList", commentList);
+
+        return "board/boardDetail"
+
+
+
     }
 
     @ResponseBody

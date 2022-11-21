@@ -7,6 +7,7 @@ import MyFirstProject.board.dto.BoardSummaryDto;
 import MyFirstProject.board.dto.CommentDto;
 import MyFirstProject.board.mapper.BoardMapper;
 import MyFirstProject.member.dto.MemberDto;
+import MyFirstProject.member.mapper.MemberMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class BoardService {
 
     @Autowired
     BoardMapper boardMapper;
+
+    @Autowired
+    MemberMapper memberMapper;
 
     @Autowired
     FileUtils fileUtils;
@@ -179,7 +183,17 @@ public class BoardService {
 
     public List<CommentDto> getBoardCommentList(int boardIdx) {
         List<CommentDto> commentList = boardMapper.selectBoardCommentList(boardIdx);
+        Iterator<CommentDto> iterator = commentList.iterator();
+        while (iterator.hasNext()){
+            CommentDto comment = iterator.next();
+            MemberDto member = memberMapper.findMemberByIdx(comment.getMemberIdx());
+            comment.setMemberDto(member);
+        }
         return commentList;
+    }
+
+    public void addComment(CommentDto commentDto) {
+        boardMapper.insertComment(commentDto);
     }
 }
 
