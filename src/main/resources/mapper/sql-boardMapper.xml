@@ -173,6 +173,7 @@
             WHERE
                 board_idx = #{boardIdx}
                 AND deleted_yn = 'N'
+            ORDER BY created_datetime DESC
         ]]>
     </select>
     
@@ -180,7 +181,11 @@
         <![CDATA[
             INSERT INTO comment
             (
-
+                board_idx,member_idx,content,created_datetime
+            )
+            VALUES
+            (
+                #{boardIdx},#{memberIdx},#{content},NOW()
             )
         ]]>
     </insert>

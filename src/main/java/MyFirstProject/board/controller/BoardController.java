@@ -68,13 +68,15 @@ public class BoardController {
 
     @PostMapping("/board/comment/add")
     public String addComment(Model model , HttpServletRequest request, @RequestParam Map<String, Object> paramMap){
-        MemberDto member = (MemberDto) request.getSession().getAttribute(SessionConstants.LOGIN_MEMBER);
+        log.debug("안녕앙");
+        MemberDto memberDto = (MemberDto) request.getSession().getAttribute(SessionConstants.LOGIN_MEMBER);
         int boardIdx = Integer.valueOf(paramMap.get("boardIdx").toString());
         String content = paramMap.get("content").toString();
         CommentDto commentDto = new CommentDto();
         commentDto.setContent(content);
         commentDto.setBoardIdx(boardIdx);
-        commentDto.setMemberIdx(member.getMemberIdx());
+        commentDto.setMemberIdx(memberDto.getMemberIdx());
+        commentDto.setMemberDto(memberDto);
 
         //DB에 댓글 넣기
         log.debug("addComment : " + commentDto.getContent() + " By " + commentDto.getMemberDto().getName());
@@ -84,7 +86,7 @@ public class BoardController {
         List<CommentDto> commentList = boardService.getBoardCommentList(boardIdx);
         model.addAttribute("commentList", commentList);
 
-        return "board/boardDetail"
+        return "board/boardDetail :: #commentTable";
 
 
 

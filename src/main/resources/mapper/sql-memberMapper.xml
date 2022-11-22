@@ -5,6 +5,7 @@
     <select id="findMemberByIdPw" parameterType="MyFirstProject.member.dto.MemberDto" resultType="MyFirstProject.member.dto.MemberDto">
         <![CDATA[
             SELECT
+                member_idx,
                 login_id,
                 password,
                 name
@@ -51,7 +52,7 @@
         ]]>
     </insert>
 
-    <select id="findMemberByIdx" resultType="MyFirstProject.member.dto.MemberDto">
+    <select id="findMemberByIdx" parameterType="long" resultType="MyFirstProject.member.dto.MemberDto">
         <![CDATA[
             SELECT
                 member_idx,

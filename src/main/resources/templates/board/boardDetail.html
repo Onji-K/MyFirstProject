@@ -253,7 +253,7 @@
                                 <textarea class="col form-control" rows="3" name="content" id="inputContent" placeholder="Join the discussion and leave a comment!"></textarea>
                               </div>
                               <div class="row">
-                                <input type="button" value="Submit" onclick="updateComment;return false">
+                                <input type="button" value="Submit" onclick="updateComment();return false">
                               </div>
                             </form>
 
@@ -338,7 +338,7 @@
     function updateComment() {
       var formData = {
         content : $("#inputContent").val(),
-        boardIdx : $("#boardIdx")
+        boardIdx : $("#boardIdx").val()
       };
       $.ajax({
         url: "/board/comment/add",
